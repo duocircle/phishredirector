@@ -1,1 +1,1 @@
-phishredirector
+Code to allow the redirection of rewritten urls for customers migrating from the system. 
