@@ -28,6 +28,7 @@ Funcational Web Server (Nginx / Apache / Caddy) with PHP7 support
 - Update your CNAME to point to your new webserver
 - Ensure that SSL is enabled
 - Copy and paste an existing re-written link and check your logs to see if your new server processed the request.
+- You will not have malicious url protection, but your links will redirect
 
 ## Contributing
 Pull requests are welcome. For major changes, please open an issue first to discuss what you would like to change.
