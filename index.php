@@ -4,13 +4,18 @@
 $pp_public_id     = '';
 $pp_shared_secret = '';
 ////////////////////////////////////////////////////////////////
-$query = http_build_query([
+$expectedQueryParameters = [
         'url'   => $_GET['url'],
         'id'    => $pp_public_id,
         'rcpt'  => $_GET['rcpt'],
         'tss'   => $_GET['tss'],
         'msgid' => $_GET['msgid'],
-]);
+];
+if (isset($_GET['html'])) {
+    $expectedQueryParameters['html'] = $_GET['html'];
+}
+$query = http_build_query($expectedQueryParameters);
+
 $hash = substr(hash_hmac('sha1', $query, $pp_shared_secret),0,8);
 if ( $hash !== $_GET['h'] ) {
     // try again, accounting for incorrect encoding of email address
