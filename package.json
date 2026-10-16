@@ -1,0 +1,20 @@
+{
+  "name": "phishredirector",
+  "version": "2.0.0",
+  "private": true,
+  "description": "Keeps old Phish Protection rewritten links working after you leave Phish Protection or change your rewriting domain.",
+  "type": "module",
+  "scripts": {
+    "test": "node --test"
+  },
+  "cloudflare": {
+    "bindings": {
+      "PP_PUBLIC_ID": {
+        "description": "The **Public ID** from **Settings > Company** in Phish Protection. See [Find your values](https://github.com/duocircle/phishredirector#find-your-values)."
+      },
+      "PP_SHARED_SECRET": {
+        "description": "The **Shared Secret** from **Settings > Company** in Phish Protection. Click the eye icon to show it. See [Find your values](https://github.com/duocircle/phishredirector#find-your-values)."
+      }
+    }
+  }
+}

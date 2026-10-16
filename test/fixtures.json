@@ -1,0 +1,360 @@
+{
+    "publicId": "a1c3",
+    "sharedSecret": "test-shared-secret-0123456789abcdef",
+    "linkDomains": "linkcheck.example.com, old-links.example.com.",
+    "host": "linkcheck.example.com",
+    "cases": [
+        {
+            "name": "basic link",
+            "query": "url=https%3A%2F%2Fwww.example.com%2Fpath%2Fpage%3Fa%3D1%26b%3Dtwo%23section&id=a1c3&rcpt=user%40example.org&tss=1718000000&msgid=b82d4225-4b0f-11e9-a4b6-f9238d66ad8e&h=c7b0941f",
+            "status": 302,
+            "location": "https://www.example.com/path/page?a=1&b=two#section"
+        },
+        {
+            "name": "html parameter",
+            "query": "url=https%3A%2F%2Fwww.example.com%2Fpath%2Fpage%3Fa%3D1%26b%3Dtwo%23section&id=a1c3&rcpt=user%40example.org&tss=1718000000&msgid=b82d4225-4b0f-11e9-a4b6-f9238d66ad8e&html=0&h=8d694129",
+            "status": 302,
+            "location": "https://www.example.com/path/page?a=1&b=two#section"
+        },
+        {
+            "name": "plus sign in recipient",
+            "query": "url=https%3A%2F%2Fwww.example.com%2Fpath%2Fpage%3Fa%3D1%26b%3Dtwo%23section&id=a1c3&rcpt=first.last%2Btag%40example.org&tss=1718000000&msgid=b82d4225-4b0f-11e9-a4b6-f9238d66ad8e&h=55c0e67e",
+            "status": 302,
+            "location": "https://www.example.com/path/page?a=1&b=two#section"
+        },
+        {
+            "name": "ampersand in recipient",
+            "query": "url=https%3A%2F%2Fwww.example.com%2Fpath%2Fpage%3Fa%3D1%26b%3Dtwo%23section&id=a1c3&rcpt=a%26b%40example.org&tss=1718000000&msgid=b82d4225-4b0f-11e9-a4b6-f9238d66ad8e&h=c2fcc936",
+            "status": 302,
+            "location": "https://www.example.com/path/page?a=1&b=two#section"
+        },
+        {
+            "name": "non-ASCII characters in url",
+            "query": "url=https%3A%2F%2Fexample.com%2Fcaf%C3%A9%2F%E6%97%A5%E6%9C%AC%3Fq%3D%C3%BC&id=a1c3&rcpt=user%40example.org&tss=1718000000&msgid=b82d4225-4b0f-11e9-a4b6-f9238d66ad8e&h=0bd43fce",
+            "status": 302,
+            "location": "https://example.com/café/日本?q=ü"
+        },
+        {
+            "name": "special characters in url",
+            "query": "url=https%3A%2F%2Fexample.com%2Fa+b%7Ec%21d%2Ae%27f%28g%29h%3Fx%3D%2541%26y%3D%2B&id=a1c3&rcpt=user%40example.org&tss=1718000000&msgid=b82d4225-4b0f-11e9-a4b6-f9238d66ad8e&h=03b257a4",
+            "status": 302,
+            "location": "https://example.com/a b~c!d*e'f(g)h?x=%41&y=+"
+        },
+        {
+            "name": "empty msgid",
+            "query": "url=https%3A%2F%2Fwww.example.com%2Fpath%2Fpage%3Fa%3D1%26b%3Dtwo%23section&id=a1c3&rcpt=user%40example.org&tss=1718000000&msgid=&h=4941e11a",
+            "status": 302,
+            "location": "https://www.example.com/path/page?a=1&b=two#section"
+        },
+        {
+            "name": "12 character hash",
+            "query": "url=https%3A%2F%2Fwww.example.com%2Fpath%2Fpage%3Fa%3D1%26b%3Dtwo%23section&id=a1c3&rcpt=user%40example.org&tss=1718000000&msgid=b82d4225-4b0f-11e9-a4b6-f9238d66ad8e&h=c7b0941fa3ba",
+            "status": 302,
+            "location": "https://www.example.com/path/page?a=1&b=two#section"
+        },
+        {
+            "name": "40 character hash",
+            "query": "url=https%3A%2F%2Fwww.example.com%2Fpath%2Fpage%3Fa%3D1%26b%3Dtwo%23section&id=a1c3&rcpt=user%40example.org&tss=1718000000&msgid=b82d4225-4b0f-11e9-a4b6-f9238d66ad8e&h=c7b0941fa3ba4fc798f96a4b798bc8942d3f62d2",
+            "status": 302,
+            "location": "https://www.example.com/path/page?a=1&b=two#section"
+        },
+        {
+            "name": "hash with unencoded recipient",
+            "query": "rcpt=first.last%2Btag%40example.org&url=https%3A%2F%2Fwww.example.com%2Fpath%2Fpage%3Fa%3D1%26b%3Dtwo%23section&tss=1718000000&msgid=b82d4225-4b0f-11e9-a4b6-f9238d66ad8e&h=abba9391",
+            "status": 302,
+            "location": "https://www.example.com/path/page?a=1&b=two#section"
+        },
+        {
+            "name": "40 character hash with unencoded recipient",
+            "query": "rcpt=first.last%2Btag%40example.org&url=https%3A%2F%2Fwww.example.com%2Fpath%2Fpage%3Fa%3D1%26b%3Dtwo%23section&tss=1718000000&msgid=b82d4225-4b0f-11e9-a4b6-f9238d66ad8e&h=abba9391a368c297e5c9bd6fab5762c226e7656a",
+            "status": 302,
+            "location": "https://www.example.com/path/page?a=1&b=two#section"
+        },
+        {
+            "name": "link without id",
+            "query": "url=https%3A%2F%2Fwww.example.com%2Fpath%2Fpage%3Fa%3D1%26b%3Dtwo%23section&rcpt=user%40example.org&tss=1718000000&msgid=b82d4225-4b0f-11e9-a4b6-f9238d66ad8e&h=c7b0941f",
+            "status": 302,
+            "location": "https://www.example.com/path/page?a=1&b=two#section"
+        },
+        {
+            "name": "hash first, without id",
+            "query": "h=c7b0941f&url=https%3A%2F%2Fwww.example.com%2Fpath%2Fpage%3Fa%3D1%26b%3Dtwo%23section&rcpt=user%40example.org&tss=1718000000&msgid=b82d4225-4b0f-11e9-a4b6-f9238d66ad8e",
+            "status": 302,
+            "location": "https://www.example.com/path/page?a=1&b=two#section"
+        },
+        {
+            "name": "raw query in a different order",
+            "query": "id=a1c3&url=https%3A%2F%2Fwww.example.com%2Fpath%2Fpage%3Fa%3D1%26b%3Dtwo%23section&tss=1718000000&msgid=b82d4225-4b0f-11e9-a4b6-f9238d66ad8e&rcpt=user%40example.org&h=4a3a85dc",
+            "status": 302,
+            "location": "https://www.example.com/path/page?a=1&b=two#section"
+        },
+        {
+            "name": "raw query with lowercase hex",
+            "query": "id=a1c3&url=https%3a%2f%2fwww.example.com%2fpath%2fpage%3fa%3d1%26b%3dtwo%23section&tss=1718000000&msgid=b82d4225-4b0f-11e9-a4b6-f9238d66ad8e&rcpt=user%40example.org&h=86d68e63",
+            "status": 302,
+            "location": "https://www.example.com/path/page?a=1&b=two#section"
+        },
+        {
+            "name": "tracking parameter signed after the hash",
+            "query": "url=https%3A%2F%2Fwww.example.com%2Fpath%2Fpage%3Fa%3D1%26b%3Dtwo%23section&id=a1c3&rcpt=user%40example.org&tss=1718000000&msgid=b82d4225-4b0f-11e9-a4b6-f9238d66ad8e&h=68b2b6b1&utm_source=news",
+            "status": 302,
+            "location": "https://www.example.com/path/page?a=1&b=two#section"
+        },
+        {
+            "name": "parsed values in a different order",
+            "query": "id=a1c3&msgid=b82d4225-4b0f-11e9-a4b6-f9238d66ad8e&url=https%3A%2F%2Fwww.example.com%2Fpath%2Fpage%3Fa%3D1%26b%3Dtwo%23section&tss=1718000000&rcpt=user%40example.org&h=d326ec24",
+            "status": 302,
+            "location": "https://www.example.com/path/page?a=1&b=two#section"
+        },
+        {
+            "name": "tracking parameter after the hash",
+            "query": "url=https%3A%2F%2Fwww.example.com%2Fpath%2Fpage%3Fa%3D1%26b%3Dtwo%23section&id=a1c3&rcpt=user%40example.org&tss=1718000000&msgid=b82d4225-4b0f-11e9-a4b6-f9238d66ad8e&h=c7b0941f&utm_source=news",
+            "status": 302,
+            "location": "https://www.example.com/path/page?a=1&b=two#section"
+        },
+        {
+            "name": "&amp; separators",
+            "query": "url=https%3A%2F%2Fwww.example.com%2Fpath%2Fpage%3Fa%3D1%26b%3Dtwo%23section&amp;id=a1c3&amp;rcpt=user%40example.org&amp;tss=1718000000&amp;msgid=b82d4225-4b0f-11e9-a4b6-f9238d66ad8e&amp;h=c7b0941f",
+            "status": 302,
+            "location": "https://www.example.com/path/page?a=1&b=two#section"
+        },
+        {
+            "name": "&amp;amp; separators",
+            "query": "url=https%3A%2F%2Fwww.example.com%2Fpath%2Fpage%3Fa%3D1%26b%3Dtwo%23section&amp;amp;id=a1c3&amp;amp;rcpt=user%40example.org&amp;amp;tss=1718000000&amp;amp;msgid=b82d4225-4b0f-11e9-a4b6-f9238d66ad8e&amp;amp;h=c7b0941f",
+            "status": 302,
+            "location": "https://www.example.com/path/page?a=1&b=two#section"
+        },
+        {
+            "name": "url and rcpt encoded two times",
+            "query": "url=https%253A%252F%252Fwww.example.com%252Fpath%252Fpage%253Fa%253D1%2526b%253Dtwo%2523section&id=a1c3&rcpt=user%2540example.org&tss=1718000000&msgid=b82d4225-4b0f-11e9-a4b6-f9238d66ad8e&h=c7b0941f",
+            "status": 302,
+            "location": "https://www.example.com/path/page?a=1&b=two#section"
+        },
+        {
+            "name": "invisible character before the url",
+            "query": "url=%E2%81%A0https%3A%2F%2Fexample.com%2Fjoined&id=a1c3&rcpt=user%40example.org&tss=1718000000&msgid=b82d4225-4b0f-11e9-a4b6-f9238d66ad8e&h=a4f61e24",
+            "status": 302,
+            "location": "https://example.com/joined"
+        },
+        {
+            "name": "invisible character after an added http://",
+            "query": "url=http%3A%2F%2F%E2%81%A0https%3A%2F%2Fexample.com%2Fjoined&id=a1c3&rcpt=user%40example.org&tss=1718000000&msgid=b82d4225-4b0f-11e9-a4b6-f9238d66ad8e&h=16b6f511",
+            "status": 302,
+            "location": "https://example.com/joined"
+        },
+        {
+            "name": "url without a scheme",
+            "query": "url=www.example.com%2Fno-scheme&id=a1c3&rcpt=user%40example.org&tss=1718000000&msgid=b82d4225-4b0f-11e9-a4b6-f9238d66ad8e&h=08129da5",
+            "status": 302,
+            "location": "http://www.example.com/no-scheme"
+        },
+        {
+            "name": "url with a port and without a scheme",
+            "query": "url=example.com%3A8080%2Fport&id=a1c3&rcpt=user%40example.org&tss=1718000000&msgid=b82d4225-4b0f-11e9-a4b6-f9238d66ad8e&h=5613dd87",
+            "status": 302,
+            "location": "http://example.com:8080/port"
+        },
+        {
+            "name": "spaces around the url",
+            "query": "url=++https%3A%2F%2Fexample.com%2Fspace++&id=a1c3&rcpt=user%40example.org&tss=1718000000&msgid=b82d4225-4b0f-11e9-a4b6-f9238d66ad8e&h=c272bd7a",
+            "status": 302,
+            "location": "https://example.com/space"
+        },
+        {
+            "name": "html=1 decodes entities in the url",
+            "query": "url=https%3A%2F%2Fexample.com%2F%3Fa%3D1%26amp%3Bb%3D2&id=a1c3&rcpt=user%40example.org&tss=1718000000&msgid=b82d4225-4b0f-11e9-a4b6-f9238d66ad8e&html=1&h=ec268e0b",
+            "status": 302,
+            "location": "https://example.com/?a=1&b=2"
+        },
+        {
+            "name": "html=0 keeps entities in the url",
+            "query": "url=https%3A%2F%2Fexample.com%2F%3Fa%3D1%26amp%3Bb%3D2&id=a1c3&rcpt=user%40example.org&tss=1718000000&msgid=b82d4225-4b0f-11e9-a4b6-f9238d66ad8e&html=0&h=d87bca72",
+            "status": 302,
+            "location": "https://example.com/?a=1&amp;b=2"
+        },
+        {
+            "name": "signed mailto:a@example.com?subject=Hi",
+            "query": "url=mailto%3Aa%40example.com%3Fsubject%3DHi&id=a1c3&rcpt=user%40example.org&tss=1718000000&msgid=b82d4225-4b0f-11e9-a4b6-f9238d66ad8e&h=76120da3",
+            "status": 302,
+            "location": "mailto:a@example.com?subject=Hi"
+        },
+        {
+            "name": "signed MAILTO:a@example.com",
+            "query": "url=MAILTO%3Aa%40example.com&id=a1c3&rcpt=user%40example.org&tss=1718000000&msgid=b82d4225-4b0f-11e9-a4b6-f9238d66ad8e&h=91e32123",
+            "status": 302,
+            "location": "MAILTO:a@example.com"
+        },
+        {
+            "name": "signed ftp://example.com/file.txt",
+            "query": "url=ftp%3A%2F%2Fexample.com%2Ffile.txt&id=a1c3&rcpt=user%40example.org&tss=1718000000&msgid=b82d4225-4b0f-11e9-a4b6-f9238d66ad8e&h=9e2caf9a",
+            "status": 302,
+            "location": "ftp://example.com/file.txt"
+        },
+        {
+            "name": "signed tel:+15551234",
+            "query": "url=tel%3A%2B15551234&id=a1c3&rcpt=user%40example.org&tss=1718000000&msgid=b82d4225-4b0f-11e9-a4b6-f9238d66ad8e&h=591feb8a",
+            "status": 302,
+            "location": "tel:+15551234"
+        },
+        {
+            "name": "signed tel:911",
+            "query": "url=tel%3A911&id=a1c3&rcpt=user%40example.org&tss=1718000000&msgid=b82d4225-4b0f-11e9-a4b6-f9238d66ad8e&h=43a327d9",
+            "status": 302,
+            "location": "tel:911"
+        },
+        {
+            "name": "url httpfoo.example.com/x without a scheme",
+            "query": "url=httpfoo.example.com%2Fx&id=a1c3&rcpt=user%40example.org&tss=1718000000&msgid=b82d4225-4b0f-11e9-a4b6-f9238d66ad8e&h=37aa2359",
+            "status": 302,
+            "location": "http://httpfoo.example.com/x"
+        },
+        {
+            "name": "url httpbin.org/path without a scheme",
+            "query": "url=httpbin.org%2Fpath&id=a1c3&rcpt=user%40example.org&tss=1718000000&msgid=b82d4225-4b0f-11e9-a4b6-f9238d66ad8e&h=444d6d78",
+            "status": 302,
+            "location": "http://httpbin.org/path"
+        },
+        {
+            "name": "url https.example.com/path without a scheme",
+            "query": "url=https.example.com%2Fpath&id=a1c3&rcpt=user%40example.org&tss=1718000000&msgid=b82d4225-4b0f-11e9-a4b6-f9238d66ad8e&h=a0995c8b",
+            "status": 302,
+            "location": "http://https.example.com/path"
+        },
+        {
+            "name": "signed javascript:alert(1) is refused",
+            "query": "url=javascript%3Aalert%281%29&id=a1c3&rcpt=user%40example.org&tss=1718000000&msgid=b82d4225-4b0f-11e9-a4b6-f9238d66ad8e&h=a1b82080",
+            "status": 400
+        },
+        {
+            "name": "signed JavaScript:alert(1) is refused",
+            "query": "url=JavaScript%3Aalert%281%29&id=a1c3&rcpt=user%40example.org&tss=1718000000&msgid=b82d4225-4b0f-11e9-a4b6-f9238d66ad8e&h=b37031cc",
+            "status": 400
+        },
+        {
+            "name": "signed data:text/html,hi is refused",
+            "query": "url=data%3Atext%2Fhtml%2Chi&id=a1c3&rcpt=user%40example.org&tss=1718000000&msgid=b82d4225-4b0f-11e9-a4b6-f9238d66ad8e&h=9738f340",
+            "status": 400
+        },
+        {
+            "name": "signed vbscript:msgbox(1) is refused",
+            "query": "url=vbscript%3Amsgbox%281%29&id=a1c3&rcpt=user%40example.org&tss=1718000000&msgid=b82d4225-4b0f-11e9-a4b6-f9238d66ad8e&h=6836c51a",
+            "status": 400
+        },
+        {
+            "name": "signed file:///etc/passwd is refused",
+            "query": "url=file%3A%2F%2F%2Fetc%2Fpasswd&id=a1c3&rcpt=user%40example.org&tss=1718000000&msgid=b82d4225-4b0f-11e9-a4b6-f9238d66ad8e&h=404ea09b",
+            "status": 400
+        },
+        {
+            "name": "signed x:12a is refused",
+            "query": "url=x%3A12a&id=a1c3&rcpt=user%40example.org&tss=1718000000&msgid=b82d4225-4b0f-11e9-a4b6-f9238d66ad8e&h=ca51f107",
+            "status": 400
+        },
+        {
+            "name": "signed empty url is refused",
+            "query": "url=&id=a1c3&rcpt=user%40example.org&tss=1718000000&msgid=b82d4225-4b0f-11e9-a4b6-f9238d66ad8e&h=fbbbb0ed",
+            "status": 400
+        },
+        {
+            "name": "changed url",
+            "query": "url=https%3A%2F%2Fevil.example.net%2F&rcpt=user%40example.org&tss=1718000000&msgid=b82d4225-4b0f-11e9-a4b6-f9238d66ad8e&h=c7b0941f",
+            "status": 403
+        },
+        {
+            "name": "wrong hash",
+            "query": "url=https%3A%2F%2Fwww.example.com%2Fpath%2Fpage%3Fa%3D1%26b%3Dtwo%23section&id=a1c3&rcpt=user%40example.org&tss=1718000000&msgid=b82d4225-4b0f-11e9-a4b6-f9238d66ad8e&h=00000000",
+            "status": 403
+        },
+        {
+            "name": "missing hash",
+            "query": "url=https%3A%2F%2Fwww.example.com%2Fpath%2Fpage%3Fa%3D1%26b%3Dtwo%23section&id=a1c3&rcpt=user%40example.org&tss=1718000000&msgid=b82d4225-4b0f-11e9-a4b6-f9238d66ad8e",
+            "status": 403
+        },
+        {
+            "name": "7 character hash",
+            "query": "url=https%3A%2F%2Fwww.example.com%2Fpath%2Fpage%3Fa%3D1%26b%3Dtwo%23section&id=a1c3&rcpt=user%40example.org&tss=1718000000&msgid=b82d4225-4b0f-11e9-a4b6-f9238d66ad8e&h=c7b0941",
+            "status": 403
+        },
+        {
+            "name": "41 character hash",
+            "query": "url=https%3A%2F%2Fwww.example.com%2Fpath%2Fpage%3Fa%3D1%26b%3Dtwo%23section&id=a1c3&rcpt=user%40example.org&tss=1718000000&msgid=b82d4225-4b0f-11e9-a4b6-f9238d66ad8e&h=c7b0941fa3ba4fc798f96a4b798bc8942d3f62d20",
+            "status": 403
+        },
+        {
+            "name": "long hash with a wrong end",
+            "query": "url=https%3A%2F%2Fwww.example.com%2Fpath%2Fpage%3Fa%3D1%26b%3Dtwo%23section&id=a1c3&rcpt=user%40example.org&tss=1718000000&msgid=b82d4225-4b0f-11e9-a4b6-f9238d66ad8e&h=c7b0941f0000",
+            "status": 403
+        },
+        {
+            "name": "uppercase hash",
+            "query": "url=https%3A%2F%2Fwww.example.com%2Fpath%2Fpage%3Fa%3D1%26b%3Dtwo%23section&id=a1c3&rcpt=user%40example.org&tss=1718000000&msgid=b82d4225-4b0f-11e9-a4b6-f9238d66ad8e&h=C7B0941F",
+            "status": 403
+        },
+        {
+            "name": "html parameter added",
+            "query": "url=https%3A%2F%2Fwww.example.com%2Fpath%2Fpage%3Fa%3D1%26b%3Dtwo%23section&id=a1c3&rcpt=user%40example.org&tss=1718000000&msgid=b82d4225-4b0f-11e9-a4b6-f9238d66ad8e&html=1&h=c7b0941f",
+            "status": 403
+        },
+        {
+            "name": "url added after the hash",
+            "query": "url=https%3A%2F%2Fwww.example.com%2Fpath%2Fpage%3Fa%3D1%26b%3Dtwo%23section&id=a1c3&rcpt=user%40example.org&tss=1718000000&msgid=b82d4225-4b0f-11e9-a4b6-f9238d66ad8e&h=c7b0941f&url=https%3A%2F%2Fevil.example.net%2F",
+            "status": 403
+        },
+        {
+            "name": "URL added after the hash",
+            "query": "url=https%3A%2F%2Fwww.example.com%2Fpath%2Fpage%3Fa%3D1%26b%3Dtwo%23section&id=a1c3&rcpt=user%40example.org&tss=1718000000&msgid=b82d4225-4b0f-11e9-a4b6-f9238d66ad8e&h=c7b0941f&URL=https%3A%2F%2Fevil.example.net%2F",
+            "status": 403
+        },
+        {
+            "name": "array url after the hash",
+            "query": "url=https%3A%2F%2Fwww.example.com%2Fpath%2Fpage%3Fa%3D1%26b%3Dtwo%23section&id=a1c3&rcpt=user%40example.org&tss=1718000000&msgid=b82d4225-4b0f-11e9-a4b6-f9238d66ad8e&h=c7b0941f&url[]=https%3A%2F%2Fevil.example.net%2F",
+            "status": 403
+        },
+        {
+            "name": "hash as an array",
+            "query": "url=https%3A%2F%2Fwww.example.com%2Fpath%2Fpage%3Fa%3D1%26b%3Dtwo%23section&id=a1c3&rcpt=user%40example.org&tss=1718000000&msgid=b82d4225-4b0f-11e9-a4b6-f9238d66ad8e&h[]=c7b0941f",
+            "status": 403
+        },
+        {
+            "name": "url as an array",
+            "query": "url[]=https%3A%2F%2Fwww.example.com%2Fpath%2Fpage%3Fa%3D1%26b%3Dtwo%23section&id=a1c3&rcpt=user%40example.org&tss=1718000000&msgid=b82d4225-4b0f-11e9-a4b6-f9238d66ad8e&h=c7b0941f",
+            "status": 403
+        },
+        {
+            "name": "url with a NUL byte added after the hash",
+            "query": "url=https%3A%2F%2Fwww.example.com%2Fpath%2Fpage%3Fa%3D1%26b%3Dtwo%23section&id=a1c3&rcpt=user%40example.org&tss=1718000000&msgid=b82d4225-4b0f-11e9-a4b6-f9238d66ad8e&h=c7b0941f&url%00=https%3A%2F%2Fevil.example.net%2F",
+            "status": 403
+        },
+        {
+            "name": "html in url is escaped",
+            "query": "url=%3Cscript%3Ealert%281%29%3C%2Fscript%3E&rcpt=user%40example.org&tss=1718000000&msgid=b82d4225-4b0f-11e9-a4b6-f9238d66ad8e&h=c7b0941f",
+            "status": 403
+        },
+        {
+            "name": "second link check domain",
+            "query": "url=https%3A%2F%2Fwww.example.com%2Fpath%2Fpage%3Fa%3D1%26b%3Dtwo%23section&id=a1c3&rcpt=user%40example.org&tss=1718000000&msgid=b82d4225-4b0f-11e9-a4b6-f9238d66ad8e&h=c7b0941f",
+            "status": 302,
+            "location": "https://www.example.com/path/page?a=1&b=two#section",
+            "host": "old-links.example.com"
+        },
+        {
+            "name": "host with uppercase, a trailing dot, and a port",
+            "query": "url=https%3A%2F%2Fwww.example.com%2Fpath%2Fpage%3Fa%3D1%26b%3Dtwo%23section&id=a1c3&rcpt=user%40example.org&tss=1718000000&msgid=b82d4225-4b0f-11e9-a4b6-f9238d66ad8e&h=c7b0941f",
+            "status": 302,
+            "location": "https://www.example.com/path/page?a=1&b=two#section",
+            "host": "LinkCheck.Example.com.:443"
+        },
+        {
+            "name": "other host",
+            "query": "url=https%3A%2F%2Fwww.example.com%2Fpath%2Fpage%3Fa%3D1%26b%3Dtwo%23section&id=a1c3&rcpt=user%40example.org&tss=1718000000&msgid=b82d4225-4b0f-11e9-a4b6-f9238d66ad8e&h=c7b0941f",
+            "status": 403,
+            "host": "other.example.com"
+        },
+        {
+            "name": "subdomain of a link check domain",
+            "query": "url=https%3A%2F%2Fwww.example.com%2Fpath%2Fpage%3Fa%3D1%26b%3Dtwo%23section&id=a1c3&rcpt=user%40example.org&tss=1718000000&msgid=b82d4225-4b0f-11e9-a4b6-f9238d66ad8e&h=c7b0941f",
+            "status": 403,
+            "host": "a.linkcheck.example.com"
+        }
+    ]
+}

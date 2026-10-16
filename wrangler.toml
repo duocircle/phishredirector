@@ -1,0 +1,10 @@
+name = "phishredirector"
+main = "src/worker.js"
+compatibility_date = "2026-09-01"
+workers_dev = true
+# Keep the variables that you set in the Cloudflare dashboard, for example PP_LINK_DOMAINS.
+keep_vars = true
+
+# Set PP_PUBLIC_ID and PP_SHARED_SECRET as secrets. Do not put them in this file.
+# PP_LINK_DOMAINS is optional. See README.md.
+# See .dev.vars.example and README.md.
