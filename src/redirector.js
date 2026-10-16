@@ -53,9 +53,11 @@ export function phpUrlEncode(bin) {
 }
 
 // Return the variable name that PHP parse_str() makes from a decoded key, and if the value is an array.
+// PHP stops the name at a NUL byte, and it ignores a name that starts with "[" (an empty name).
 function phpVariableName(key) {
-  key = key.replace(/^ +/, '');
+  key = key.split('\0')[0].replace(/^ +/, '');
   const open = key.indexOf('[');
+  if (open === 0) return { name: '', isArray: false };
   if (open > 0 && key.indexOf(']', open) !== -1) {
     return { name: key.slice(0, open).replace(/[. ]/g, '_'), isArray: true };
   }

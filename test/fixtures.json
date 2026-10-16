@@ -321,6 +321,11 @@
             "status": 403
         },
         {
+            "name": "url with a NUL byte added after the hash",
+            "query": "url=https%3A%2F%2Fwww.example.com%2Fpath%2Fpage%3Fa%3D1%26b%3Dtwo%23section&id=a1c3&rcpt=user%40example.org&tss=1718000000&msgid=b82d4225-4b0f-11e9-a4b6-f9238d66ad8e&h=c7b0941f&url%00=https%3A%2F%2Fevil.example.net%2F",
+            "status": 403
+        },
+        {
             "name": "html in url is escaped",
             "query": "url=%3Cscript%3Ealert%281%29%3C%2Fscript%3E&rcpt=user%40example.org&tss=1718000000&msgid=b82d4225-4b0f-11e9-a4b6-f9238d66ad8e&h=c7b0941f",
             "status": 403

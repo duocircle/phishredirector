@@ -63,6 +63,10 @@ test('parseQuery follows PHP parse_str', () => {
   assert.equal(params.get('a'), '6');
   assert.equal(params.get('h'), '');
   assert.equal(typeof params.get('f'), 'symbol');
+  // PHP stops a name at a NUL byte, and it ignores a name that starts with "[".
+  const nul = parseQuery('url=good&url%00=evil&url%00x=other&[x]=1');
+  assert.deepEqual([...nul.keys()], ['url']);
+  assert.equal(nul.get('url'), 'other');
 });
 
 test('urlScheme finds the scheme, and treats host:port as no scheme', () => {

@@ -103,7 +103,7 @@ function randomLink() {
   else hash = Array.from({ length }, () => pick([...'0123456789abcdef'])).join('');
 
   let query = chance(0.1) ? `h=${hash}&${unsigned}` : `${unsigned}&h=${hash}`;
-  if (chance(0.1)) query += pick(['&utm_medium=email', '&url=https%3A%2F%2Fevil.example.net%2F', '&URL=x', '&h[]=1', '&url[]=x']);
+  if (chance(0.1)) query += pick(['&utm_medium=email', '&url=https%3A%2F%2Fevil.example.net%2F', '&URL=x', '&h[]=1', '&url[]=x', '&url%00=x', '&%20url=x', '&[url]=x', '&url%5B=x']);
   if (chance(0.05)) query = query.replace('url=', 'url[]=');
   const separator = pick(['&', '&', '&', '&amp;', '&amp;amp;']);
   query = query.split('&').join(separator);

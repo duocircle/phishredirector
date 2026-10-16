@@ -137,6 +137,7 @@ $fail('URL added after the hash', $baseLink . '&URL=' . urlencode('https://evil.
 $fail('array url after the hash', $baseLink . '&url[]=' . urlencode('https://evil.example.net/'));
 $fail('hash as an array', hashInput($base, $publicId) . '&h[]=' . $h);
 $fail('url as an array', str_replace('url=', 'url[]=', $baseLink));
+$fail('url with a NUL byte added after the hash', $baseLink . '&url%00=' . urlencode('https://evil.example.net/'));
 $fail('html in url is escaped', http_build_query(['url' => '<script>alert(1)</script>'] + $base) . '&h=' . $h);
 
 // Link check domains (PHISH-964).
