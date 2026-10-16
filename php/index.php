@@ -16,6 +16,8 @@ const PP_MIN_HASH_LENGTH = 8;
 const PP_CRITICAL_FIELDS = ['id', 'url', 'rcpt', 'msgid', 'tss', 'html', 'h'];
 const PP_HASHING_REQUIRED_FIELDS = ['id', 'url', 'rcpt', 'msgid', 'tss'];
 const PP_HASHING_FIELDS = ['id', 'url', 'rcpt', 'msgid', 'tss', 'html'];
+// The destination URL schemes that Phish Redirector sends the browser to. A URL without a scheme gets "http://".
+const PP_PERMITTED_SCHEMES = ['http', 'https', 'mailto', 'ftp', 'tel'];
 
 function pp_fail($status, $message)
 {
@@ -136,6 +138,20 @@ function pp_strip_invisible_format_chars($url)
     return $url;
 }
 
+// Return the lowercase URL scheme, or null if there is none. src/redirector.js uses the same rule.
+// "host:port" (for example "example.com:8080/path") has no scheme, but a permitted scheme is always a scheme.
+function pp_url_scheme($url)
+{
+    if (1 !== preg_match('/^([A-Za-z][A-Za-z0-9+.-]*):(.*)$/s', $url, $matches)) {
+        return null;
+    }
+    $scheme = strtolower($matches[1]);
+    if (!in_array($scheme, PP_PERMITTED_SCHEMES, true) && 1 === preg_match('{^[0-9]{1,5}(?:[/?#]|$)}', $matches[2])) {
+        return null;
+    }
+    return $scheme;
+}
+
 // Return the destination URL from the verified parameters (APIService::prepareParams()),
 // or null if it is not a permitted URL.
 function pp_destination(array $params)
@@ -145,13 +161,12 @@ function pp_destination(array $params)
     if ('' === $url) {
         return null;
     }
-    // Refuse a scheme other than http or https, for example "javascript:".
-    $scheme = parse_url($url, PHP_URL_SCHEME);
-    if ($scheme !== null && !in_array(strtolower((string) $scheme), ['http', 'https'], true)) {
-        return null;
-    }
-    if (0 === preg_match('/^https?/i', $url)) {
+    // Refuse a scheme that is not permitted, for example "javascript:". Add "http://" if there is no scheme.
+    $scheme = pp_url_scheme($url);
+    if ($scheme === null) {
         $url = 'http://' . $url;
+    } elseif (!in_array($scheme, PP_PERMITTED_SCHEMES, true)) {
+        return null;
     }
     if (isset($params['html']) && $params['html'] === '1') {
         $url = htmlspecialchars_decode($url, ENT_QUOTES | ENT_HTML401);

@@ -173,8 +173,49 @@
             "location": "https://example.com/?a=1&amp;b=2"
         },
         {
+            "name": "signed mailto:a@example.com?subject=Hi",
+            "query": "url=mailto%3Aa%40example.com%3Fsubject%3DHi&id=a1c3&rcpt=user%40example.org&tss=1718000000&msgid=b82d4225-4b0f-11e9-a4b6-f9238d66ad8e&h=76120da3",
+            "status": 302,
+            "location": "mailto:a@example.com?subject=Hi"
+        },
+        {
+            "name": "signed MAILTO:a@example.com",
+            "query": "url=MAILTO%3Aa%40example.com&id=a1c3&rcpt=user%40example.org&tss=1718000000&msgid=b82d4225-4b0f-11e9-a4b6-f9238d66ad8e&h=91e32123",
+            "status": 302,
+            "location": "MAILTO:a@example.com"
+        },
+        {
+            "name": "signed ftp://example.com/file.txt",
+            "query": "url=ftp%3A%2F%2Fexample.com%2Ffile.txt&id=a1c3&rcpt=user%40example.org&tss=1718000000&msgid=b82d4225-4b0f-11e9-a4b6-f9238d66ad8e&h=9e2caf9a",
+            "status": 302,
+            "location": "ftp://example.com/file.txt"
+        },
+        {
+            "name": "signed tel:+15551234",
+            "query": "url=tel%3A%2B15551234&id=a1c3&rcpt=user%40example.org&tss=1718000000&msgid=b82d4225-4b0f-11e9-a4b6-f9238d66ad8e&h=591feb8a",
+            "status": 302,
+            "location": "tel:+15551234"
+        },
+        {
+            "name": "signed tel:911",
+            "query": "url=tel%3A911&id=a1c3&rcpt=user%40example.org&tss=1718000000&msgid=b82d4225-4b0f-11e9-a4b6-f9238d66ad8e&h=43a327d9",
+            "status": 302,
+            "location": "tel:911"
+        },
+        {
+            "name": "url that starts with http but has no scheme",
+            "query": "url=httpfoo.example.com%2Fx&id=a1c3&rcpt=user%40example.org&tss=1718000000&msgid=b82d4225-4b0f-11e9-a4b6-f9238d66ad8e&h=37aa2359",
+            "status": 302,
+            "location": "http://httpfoo.example.com/x"
+        },
+        {
             "name": "signed javascript:alert(1) is refused",
             "query": "url=javascript%3Aalert%281%29&id=a1c3&rcpt=user%40example.org&tss=1718000000&msgid=b82d4225-4b0f-11e9-a4b6-f9238d66ad8e&h=a1b82080",
+            "status": 400
+        },
+        {
+            "name": "signed JavaScript:alert(1) is refused",
+            "query": "url=JavaScript%3Aalert%281%29&id=a1c3&rcpt=user%40example.org&tss=1718000000&msgid=b82d4225-4b0f-11e9-a4b6-f9238d66ad8e&h=b37031cc",
             "status": 400
         },
         {
@@ -183,13 +224,18 @@
             "status": 400
         },
         {
-            "name": "signed ftp://example.com/ is refused",
-            "query": "url=ftp%3A%2F%2Fexample.com%2F&id=a1c3&rcpt=user%40example.org&tss=1718000000&msgid=b82d4225-4b0f-11e9-a4b6-f9238d66ad8e&h=5a115ea8",
+            "name": "signed vbscript:msgbox(1) is refused",
+            "query": "url=vbscript%3Amsgbox%281%29&id=a1c3&rcpt=user%40example.org&tss=1718000000&msgid=b82d4225-4b0f-11e9-a4b6-f9238d66ad8e&h=6836c51a",
             "status": 400
         },
         {
-            "name": "signed mailto:a@example.com is refused",
-            "query": "url=mailto%3Aa%40example.com&id=a1c3&rcpt=user%40example.org&tss=1718000000&msgid=b82d4225-4b0f-11e9-a4b6-f9238d66ad8e&h=759b2940",
+            "name": "signed file:///etc/passwd is refused",
+            "query": "url=file%3A%2F%2F%2Fetc%2Fpasswd&id=a1c3&rcpt=user%40example.org&tss=1718000000&msgid=b82d4225-4b0f-11e9-a4b6-f9238d66ad8e&h=404ea09b",
+            "status": 400
+        },
+        {
+            "name": "signed x:12a is refused",
+            "query": "url=x%3A12a&id=a1c3&rcpt=user%40example.org&tss=1718000000&msgid=b82d4225-4b0f-11e9-a4b6-f9238d66ad8e&h=ca51f107",
             "status": 400
         },
         {

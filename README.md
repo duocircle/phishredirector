@@ -27,7 +27,7 @@ It refuses the same unsafe links, for example:
 
 - a link with a signed parameter added after the hash
 - a link with a signed parameter as an array (`url[]=`)
-- a signed link to a URL that does not start with `http` or `https`, for example `javascript:`
+- a signed link to a URL with a scheme other than `http`, `https`, `mailto`, `ftp`, or `tel`, for example `javascript:`
 
 ## Before you start
 
@@ -154,7 +154,7 @@ Do this test before you change DNS.
    - If you see `ERROR: could not verify URL!`, the Public ID or the Shared Secret is not correct.
    - If you see `ERROR: PP_PUBLIC_ID and PP_SHARED_SECRET are not set.`, set the two values and deploy again.
    - If you see `ERROR: This link is not valid on this domain.`, add the hostname to `PP_LINK_DOMAINS`, or remove `PP_LINK_DOMAINS` while you test.
-   - If you see `ERROR: invalid URL!`, the signature is correct, but the link goes to a URL that Phish Redirector does not permit.
+   - If you see `ERROR: invalid URL!`, the signature is correct, but the link goes to a URL that Phish Redirector does not permit. Phish Redirector permits only the `http`, `https`, `mailto`, `ftp`, and `tel` schemes.
 
 ## Move your rewriting domain
 

@@ -14,6 +14,8 @@ const HASHING_REQUIRED_FIELDS = ['id', 'url', 'rcpt', 'msgid', 'tss'];
 const HASHING_FIELDS = [...HASHING_REQUIRED_FIELDS, 'html'];
 // An array value from parse_str(), for example from "url[]=x".
 const ARRAY = Symbol('array');
+// The destination URL schemes that Phish Redirector sends the browser to. A URL without a scheme gets "http://".
+const PERMITTED_SCHEMES = ['http', 'https', 'mailto', 'ftp', 'tel'];
 
 // Decode the same entities as PHP htmlspecialchars_decode() with ENT_QUOTES | ENT_HTML401.
 export function htmlSpecialCharsDecode(bin) {
@@ -201,13 +203,14 @@ export function stripInvisibleFormatChars(bin) {
   return bin;
 }
 
-// Return the URL scheme the same as PHP parse_url($url, PHP_URL_SCHEME), or null if there is none.
-// "host:port" has no scheme.
+// Return the lowercase URL scheme, or null if there is none. php/index.php uses the same rule.
+// "host:port" (for example "example.com:8080/path") has no scheme, but a permitted scheme is always a scheme.
 export function urlScheme(bin) {
-  const match = /^([A-Za-z0-9+.-]+):(.*)$/s.exec(bin);
+  const match = /^([A-Za-z][A-Za-z0-9+.-]*):(.*)$/s.exec(bin);
   if (!match) return null;
-  if (/^[0-9]{1,5}(?:[/?#]|$)/.test(match[2])) return null;
-  return match[1];
+  const scheme = match[1].toLowerCase();
+  if (!PERMITTED_SCHEMES.includes(scheme) && /^[0-9]{1,5}(?:[/?#]|$)/.test(match[2])) return null;
+  return scheme;
 }
 
 // Return the destination URL (a binary string) from the verified parameters, the same as
@@ -217,10 +220,10 @@ export function destination(params) {
   let url = stripInvisibleFormatChars(normalised.get('url') ?? '');
   url = url.replace(/^[ \t\n\r\0\x0B]+|[ \t\n\r\0\x0B]+$/g, '');
   if (url === '') return null;
-  // Refuse a scheme other than http or https, for example "javascript:".
+  // Refuse a scheme that is not permitted, for example "javascript:". Add "http://" if there is no scheme.
   const scheme = urlScheme(url);
-  if (scheme !== null && !['http', 'https'].includes(scheme.toLowerCase())) return null;
-  if (!/^https?/i.test(url)) url = 'http://' + url;
+  if (scheme === null) url = 'http://' + url;
+  else if (!PERMITTED_SCHEMES.includes(scheme)) return null;
   if (normalised.get('html') === '1') url = htmlSpecialCharsDecode(url);
   return url;
 }

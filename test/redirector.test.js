@@ -65,11 +65,13 @@ test('parseQuery follows PHP parse_str', () => {
   assert.equal(typeof params.get('f'), 'symbol');
 });
 
-test('urlScheme follows PHP parse_url', () => {
-  assert.equal(urlScheme('javascript:alert(1)'), 'javascript');
+test('urlScheme finds the scheme, and treats host:port as no scheme', () => {
+  assert.equal(urlScheme('JavaScript:alert(1)'), 'javascript');
   assert.equal(urlScheme('example.com:8080/x'), null);
   assert.equal(urlScheme('localhost:80'), null);
+  assert.equal(urlScheme('tel:911'), 'tel');
   assert.equal(urlScheme('x:12a'), 'x');
+  assert.equal(urlScheme('1abc:foo'), null);
   assert.equal(urlScheme('//example.com/a'), null);
 });
 

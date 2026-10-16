@@ -110,7 +110,13 @@ $ok('html=1 decodes entities in the url', signedLink($params, $publicId, $secret
 $params = ['url' => 'https://example.com/?a=1&amp;b=2', 'html' => '0'] + $base;
 $ok('html=0 keeps entities in the url', signedLink($params, $publicId, $secret), 'https://example.com/?a=1&amp;b=2');
 
-foreach (['javascript:alert(1)', 'data:text/html,hi', 'ftp://example.com/', 'mailto:a@example.com'] as $url) {
+// Permitted schemes: http, https, mailto, ftp, tel. Phish Protection 2.13.x refuses all but http and https.
+foreach (['mailto:a@example.com?subject=Hi', 'MAILTO:a@example.com', 'ftp://example.com/file.txt', 'tel:+15551234', 'tel:911'] as $url) {
+    $ok("signed $url", signedLink(['url' => $url] + $base, $publicId, $secret), $url);
+}
+$params = ['url' => 'httpfoo.example.com/x'] + $base;
+$ok('url that starts with http but has no scheme', signedLink($params, $publicId, $secret), 'http://httpfoo.example.com/x');
+foreach (['javascript:alert(1)', 'JavaScript:alert(1)', 'data:text/html,hi', 'vbscript:msgbox(1)', 'file:///etc/passwd', 'x:12a'] as $url) {
     $fail("signed $url is refused", signedLink(['url' => $url] + $base, $publicId, $secret), 400);
 }
 $fail('signed empty url is refused', signedLink(['url' => ''] + $base, $publicId, $secret), 400);
