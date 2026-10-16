@@ -77,6 +77,7 @@ Set `PP_LINK_DOMAINS` after you move your rewriting domain. Then Phish Redirecto
 6. [Test the deployment](#test-the-deployment) on its `workers.dev` hostname.
 7. [Move your rewriting domain](#move-your-rewriting-domain) to the Worker.
 8. Optional: Open the Worker, go to **Settings** > **Variables and Secrets**, and add `PP_LINK_DOMAINS`. See [Settings](#settings).
+9. [Add a rate limit](#add-a-rate-limit).
 
 To deploy from the command line:
 
@@ -98,6 +99,7 @@ npx wrangler secret put PP_SHARED_SECRET
 6. [Test the deployment](#test-the-deployment) on its `vercel.app` hostname.
 7. [Move your rewriting domain](#move-your-rewriting-domain) to the project.
 8. Optional: Open the project, go to **Settings** > **Environment Variables**, and add `PP_LINK_DOMAINS`. See [Settings](#settings). Then deploy the project again, because Vercel uses a changed variable only in a new deployment.
+9. [Add a rate limit](#add-a-rate-limit).
 
 To deploy from the command line:
 
@@ -125,6 +127,7 @@ You need a web server (Nginx, Apache, or Caddy) with PHP 7 or later, and an SSL 
 5. [Test the deployment](#test-the-deployment).
 6. [Move your rewriting domain](#move-your-rewriting-domain) to the server.
 7. Optional: Set `PP_LINK_DOMAINS`. See [Settings](#settings).
+8. [Add a rate limit](#add-a-rate-limit).
 
 ### Upgrade from an older version
 
@@ -170,6 +173,41 @@ Your rewriting domain now has a CNAME record that points to Phish Protection. Ch
 If your domain has CAA records, make sure that they permit the certificate authority of your platform. If they do not, the platform cannot make an SSL certificate, and the links do not work.
 
 DNS changes can take some hours to reach all users. After the change, do the [test](#test-the-deployment) again with the real rewriting domain.
+
+## Add a rate limit
+
+We recommend a rate limit on the rewriting domain. The link hash has only 8 characters, so a person can try many hashes until one is correct. A limit for each IP address makes this take many years. Normal users click only a few links, so the limit does not stop them.
+
+- **Cloudflare:** Open the zone of your rewriting domain in the Cloudflare dashboard. Go to **Security** and create a rate limiting rule:
+  - Match: **URI Path** contains `/`. This matches all requests.
+  - Count by: **IP**.
+  - Limit: 20 requests in 10 seconds.
+  - Action: **Block** for 10 seconds.
+
+  The Free plan permits one rule. On the Free plan, the rule applies to all hostnames in the zone.
+- **Vercel:** Open the project, go to **Firewall** > **Configure**, and click **+ New Rule**.
+  1. Set the **Then** action to **Rate Limit**.
+  2. Set **Fixed Window**, a **Time Window** of 60 seconds, a **Request Limit** of 100, and the key **IP**.
+  3. Click **Save Rule**, then **Review Changes** > **Publish**.
+
+  The Hobby plan permits one rate limit rule.
+- **Nginx:** Add the zone in the `http` block, and the limit in the `server` block of the rewriting domain:
+
+  ```nginx
+  limit_req_zone $binary_remote_addr zone=phishredirector:10m rate=2r/s;
+
+  server {
+      server_name linkcheck.yourdomain.com;
+      limit_req zone=phishredirector burst=30 nodelay;
+      limit_req_status 429;
+      # ...
+  }
+  ```
+
+- **Apache:** Use `mod_evasive` or `mod_qos`. The `mod_ratelimit` module limits bandwidth, not requests.
+- **Caddy:** Build Caddy with the `caddy-ratelimit` module. The standard Caddy build has no request rate limit.
+
+Also set [`PP_LINK_DOMAINS`](#settings). Then the `workers.dev` and `vercel.app` hostnames refuse all links, so a rate limit is not necessary on them.
 
 ## Development
 
