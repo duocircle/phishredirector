@@ -2,6 +2,7 @@ import { readFileSync } from 'node:fs';
 import { spawn, spawnSync } from 'node:child_process';
 import { fileURLToPath } from 'node:url';
 import http from 'node:http';
+import https from 'node:https';
 
 export const fixtures = JSON.parse(readFileSync(new URL('./fixtures.json', import.meta.url), 'utf8'));
 
@@ -43,13 +44,16 @@ export async function startPhp(extraEnv = {}) {
 }
 
 // Send a GET request with a raw query string and a Host header. Returns the status and the Location header.
+// An https: base URL uses TLS. The TLS server name is the host of the base URL, not the Host header.
 export function send(baseUrl, query, host) {
   const target = new URL(baseUrl);
+  const client = target.protocol === 'https:' ? https : http;
   return new Promise((resolve, reject) => {
-    const request = http.request(
+    const request = client.request(
       {
         host: target.hostname,
-        port: target.port,
+        port: target.port || undefined,
+        servername: target.hostname,
         path: target.pathname + (query === '' ? '' : '?' + query),
         headers: { Host: host },
         agent: false,

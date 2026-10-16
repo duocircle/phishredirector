@@ -180,7 +180,7 @@ The tests send the links in `test/fixtures.json` to the JavaScript code. If PHP 
 
 If PHP is installed, `test/parity.test.js` also sends 2000 random links to both versions and compares the results. To repeat a failure, set `PARITY_SEED` to the seed in the test name. To send more links, set `PARITY_COUNT`.
 
-To test a running server, set `REDIRECTOR_URL`. The server must use the `publicId`, `sharedSecret`, and `linkDomains` values from `test/fixtures.json`.
+To test a running server, set `REDIRECTOR_URL` to an `http://` or `https://` URL. The server must use the `publicId`, `sharedSecret`, and `linkDomains` values from `test/fixtures.json`. The tests send the Host header from `test/fixtures.json`, so the server must accept that Host header.
 
 ```sh
 cp .dev.vars.example .dev.vars   # Then write the test values in .dev.vars.

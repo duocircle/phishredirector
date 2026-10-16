@@ -114,8 +114,10 @@ $ok('html=0 keeps entities in the url', signedLink($params, $publicId, $secret),
 foreach (['mailto:a@example.com?subject=Hi', 'MAILTO:a@example.com', 'ftp://example.com/file.txt', 'tel:+15551234', 'tel:911'] as $url) {
     $ok("signed $url", signedLink(['url' => $url] + $base, $publicId, $secret), $url);
 }
-$params = ['url' => 'httpfoo.example.com/x'] + $base;
-$ok('url that starts with http but has no scheme', signedLink($params, $publicId, $secret), 'http://httpfoo.example.com/x');
+// A url without a scheme that starts with "http" or "https" must also get "http://".
+foreach (['httpfoo.example.com/x', 'httpbin.org/path', 'https.example.com/path'] as $url) {
+    $ok("url $url without a scheme", signedLink(['url' => $url] + $base, $publicId, $secret), 'http://' . $url);
+}
 foreach (['javascript:alert(1)', 'JavaScript:alert(1)', 'data:text/html,hi', 'vbscript:msgbox(1)', 'file:///etc/passwd', 'x:12a'] as $url) {
     $fail("signed $url is refused", signedLink(['url' => $url] + $base, $publicId, $secret), 400);
 }
