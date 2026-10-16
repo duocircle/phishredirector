@@ -117,7 +117,10 @@ You need a web server (Nginx, Apache, or Caddy) with PHP 7 or later, and an SSL 
 
    > **Warning:** Do not set the web root to the repository folder. If you do, the server publishes all the files in the repository, and your secrets if they are in a file there.
 
-3. Set the `PP_PUBLIC_ID` and `PP_SHARED_SECRET` environment variables for PHP. You can also write the values at the top of `php/index.php`.
+3. Set the `PP_PUBLIC_ID` and `PP_SHARED_SECRET` environment variables for PHP. For example, use `fastcgi_param` in Nginx, `SetEnv` in Apache, or `env[...]` in the PHP-FPM pool configuration.
+
+   > **Warning:** Do not write the Shared Secret in `php/index.php` if you can use environment variables. If the web server stops running PHP files, it sends `php/index.php` as text, and the Shared Secret goes with it.
+
 4. Get an SSL certificate for your rewriting domain.
 5. [Test the deployment](#test-the-deployment).
 6. [Move your rewriting domain](#move-your-rewriting-domain) to the server.
@@ -132,7 +135,7 @@ Older versions had `index.php` in the repository folder. This version has it in 
 1. Copy the `$pp_public_id` and `$pp_shared_secret` values from the old `index.php`.
 2. Discard your change to the old file: `git checkout -- index.php`.
 3. Run `git pull`.
-4. Set the `PP_PUBLIC_ID` and `PP_SHARED_SECRET` environment variables for PHP, or write the values at the top of `php/index.php`.
+4. Set the `PP_PUBLIC_ID` and `PP_SHARED_SECRET` environment variables for PHP. See step 3 of [Deploy on your own web server](#deploy-on-your-own-web-server-php).
 5. Set the web root of the site to the `php` folder.
 6. Restart the web server.
 7. [Test the deployment](#test-the-deployment).

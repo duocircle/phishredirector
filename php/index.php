@@ -1,7 +1,8 @@
 <?php
 ////////////////////////////////////////////////////////////////
 // Find these values on the company profile in PhishProtection (Settings > Company).
-// Set them here, or set the PP_PUBLIC_ID, PP_SHARED_SECRET and PP_LINK_DOMAINS environment variables.
+// Set the PP_PUBLIC_ID, PP_SHARED_SECRET and PP_LINK_DOMAINS environment variables. If you cannot, set them here.
+// WARNING: If the web server stops running PHP files, it sends this file as text, with the values in it.
 $pp_public_id     = '';
 $pp_shared_secret = '';
 // Optional. The link check domains that this server accepts links on, separated by commas.
